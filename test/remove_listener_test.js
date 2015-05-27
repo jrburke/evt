@@ -13,6 +13,7 @@ describe('removeListener', function() {
 
     function incrementOne() {
       countOne += 1;
+      evt.removeListener('increment', incrementOne);
     }
 
     function incrementTwo() {
