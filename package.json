@@ -18,5 +18,8 @@
   "homepage": "https://github.com/jrburke/evt",
   "devDependencies": {
     "mocha": "^2.2.5"
+  },
+  "volo": {
+    "url": "https://raw.githubusercontent.com/jrburke/evt/{version}/evt.js"
   }
 }
