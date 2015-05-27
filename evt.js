@@ -142,7 +142,11 @@
           listeners = this._events[id];
 
       if (listeners) {
-        listeners.forEach(function(fn) {
+        // Use a for loop instead of forEach, in case the listener removes
+        // itself on the emit notification. In that case need to set the loop
+        // index back one.
+        for (var i = 0; i < listeners.length; i++) {
+          var fn = listeners[i];
           try {
             fn.apply(null, args);
           } catch (e) {
@@ -156,7 +160,13 @@
               throw e;
             });
           }
-        });
+
+          // If listener removed itself, set the index back a number, so that
+          // a subsequent listener does not get skipped.
+          if (listeners[i] !== fn) {
+            i -= 1;
+          }
+        }
       }
     }
   };
