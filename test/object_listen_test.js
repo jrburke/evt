@@ -129,4 +129,32 @@ describe('object listening', function() {
     assert.equal('oscar', obj.jumpName);
     assert.equal(1, obj.counter);
   });
+
+  it('late apply of method name with removeListener', function() {
+    var obj = {
+      shakeCount: 0,
+      newShakeCount: 0,
+      shake: function() {
+        this.shakeCount += 1;
+      },
+    };
+
+    evt.on('shake', obj, 'shake');
+
+    // Swap out shake definition.
+    obj.shake = function() {
+      this.newShakeCount += 1;
+    };
+
+    evt.emit('shake');
+    evt.emit('shake');
+
+    evt.removeListener('shake', obj, 'shake');
+
+    evt.emit('shake');
+    evt.emit('shake');
+
+    assert.equal(2, obj.newShakeCount);
+    assert.equal(0, obj.shakeCount);
+  });
 });
