@@ -9,6 +9,7 @@ Other notes about it:
 * Notification of listeners is done in a try/catch, so all listeners are notified even if one fails. Errors are thrown async via setTimeout so that all the listeners can be notified without escaping from the code via a throw within the listener group notification.
 * New evt.Emitter() can be used to create a new instance of an event emitter.
 * Uses "this" internally, so always call object with the emitter args.
+* Allows passing Object, propertyName for listeners, to allow Object[propertyName].apply(Object, ...) listener calls.
 
 ## License
 
