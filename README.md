@@ -12,4 +12,4 @@ Other notes about it:
 
 ## License
 
-[Mozilla Public License, v. 2.0](http://mozilla.org/MPL/2.0/)
+[Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
