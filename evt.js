@@ -34,21 +34,27 @@
                'latestOnce', 'removeObjectListener', 'removeListener',
                'emitWhenListener', 'emit'];
 
-  // Converts possible call styles to a normalized array of object, function.
+  // Converts possible call styles to a normalized array of:
+  // [object, (prop || function)].
   // Handles these cases:
-  // (Object, String) -> (Object, Object[String])
+  // (Object, String) -> (Object, String)
   // (Object, Function) -> (Object, Function)
   // (Function, undefined) -> (undefined, Function)
   function objFnPair(obj, fn) {
-    if (fn) {
-      if (typeof fn === 'string') {
-        fn = obj[fn];
-      }
-    } else {
+    if (!fn) {
       fn = obj,
       obj = undefined;
     }
     return [obj, fn];
+  }
+
+  function callApply(applyPair, args) {
+    var obj = applyPair[0],
+        fn = applyPair[1];
+    if (typeof fn === 'string') {
+      fn = obj[fn];
+    }
+    return fn.apply(obj, args);
   }
 
   function cleanEventEntry(emitter, id) {
@@ -85,7 +91,7 @@
 
       if (pending) {
         pending.forEach(function(args) {
-          applyPair[1].apply(applyPair[0], args);
+          callApply(applyPair, args);
         });
         delete this._pendingEvents[id];
       }
@@ -108,7 +114,7 @@
           return;
         }
         fired = true;
-        applyPair[1].apply(applyPair[0], arguments);
+        callApply(applyPair, arguments);
         // Remove at a further turn so that the event
         // forEach in emit does not get modified during
         // this turn.
@@ -137,7 +143,7 @@
       var applyPair = objFnPair(obj, fnName);
 
       if (this[id] && !this._pendingEvents[id]) {
-        applyPair[1].call(applyPair[0], this[id]);
+        callApply(applyPair, [this[id]]);
       }
       this.on(id, applyPair[0], applyPair[1]);
     },
@@ -151,7 +157,7 @@
       var applyPair = objFnPair(obj, fnName);
 
       if (this[id] && !this._pendingEvents[id]) {
-        applyPair[1].call(applyPair[0], this[id]);
+        callApply(applyPair, [this[id]]);
       } else {
         this.once(id, applyPair[0], applyPair[1]);
       }
@@ -233,7 +239,7 @@
               fn = listeners[i][1];
 
           try {
-            fn.apply(thisObj, args);
+            callApply(listeners[i], args);
           } catch (e) {
             // Throw at later turn so that other listeners
             // can complete. While this messes with the
