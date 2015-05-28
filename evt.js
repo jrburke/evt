@@ -1,5 +1,5 @@
 /*
- * evt, an event lib. Version 1.0.0.
+ * evt, an event lib. Version 1.1.0.
  * Copyright 2013-2015, Mozilla Foundation
  *
  * Notable features:
