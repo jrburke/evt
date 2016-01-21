@@ -31,7 +31,7 @@ describe('evt', function() {
       assert.equal(count, 1);
       assert.equal(true, !!err);
 
-      evt.removeListener(onError);
+      evt.removeListener('error', onError);
     });
 
 
@@ -61,7 +61,7 @@ describe('evt', function() {
       assert.equal(count, 1);
       assert.equal(true, !!err);
 
-      evt.removeListener(onError);
+      evt.removeListener('error', onError);
     });
   });
 
