@@ -43,8 +43,17 @@
   // (Function, undefined) -> (undefined, Function)
   function objFnPair(obj, fn) {
     if (!fn) {
-      fn = obj,
+      fn = obj;
       obj = undefined;
+    }
+
+    var type = typeof fn;
+    if (type === 'string') {
+      if (typeof obj[fn] !== 'function') {
+        throw new Error('Not a method name: ' + fn);
+      }
+    } else if (type !== 'function') {
+      throw new Error('fn is not a string or function: ' + fn);
     }
     return [obj, fn];
   }
